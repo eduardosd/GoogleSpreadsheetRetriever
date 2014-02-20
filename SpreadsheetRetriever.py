@@ -1,19 +1,23 @@
-import gdata.docs.data
-import gdata.docs.client
-import gdata.docs.service
 import gdata.spreadsheet.service
 import re, os
-import socket
-import logging
-import atom.service
 import gdata.service
 import gdata.spreadsheet
 import gdata.spreadsheet.text_db
 
-username        = 'YOUR_EMAIL'
-password        = 'PASSWORD'
-doc_name        = 'NAME_OF_FILE'
-column_title      = 'COLUMN_TITLE' 
+def printCells(title, cells):
+    col = -1
+    for cell in cells:
+        if cell.content.text == title:
+            col = cell.cell.col
+        if cell.cell.col == col:
+            print cell.content.text    
+    print
+    return
+
+username           = 'YOUR_EMAIL'
+password           = 'PASSWORD'
+doc_name           = 'YOUR_FILE_NAME'
+column_title_list  = ['TITLE_OF_COLUMN1', 'TITLE_OF_COLUMN2']
 
 gd_client = gdata.spreadsheet.service.SpreadsheetsService()
 gd_client.email = username
@@ -31,11 +35,5 @@ worksheet_id = feed.entry[0].id.text.rsplit('/',1)[1]
 
 cells = gd_client.GetCellsFeed(spreadsheet_id, worksheet_id).entry
 
-col = -1
-
-for cell in cells:
-    if cell.content.text == column_title:
-        col = cell.cell.col
-    if cell.cell.col == col:
-        print cell.content.text
-
+for column_title in column_title_list:
+    printCells(column_title, cells)
